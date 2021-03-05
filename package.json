@@ -1,0 +1,30 @@
+{
+  "name": "audio-movie-generator",
+  "version": "1.0.0",
+  "description": "generate a video from audio file",
+  "author": "cagpie",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development HOST=0.0.0.0 PORT=3000 nodemon server/index.js --watch server",
+    "build": "nuxt build",
+    "start": "cross-env NODE_ENV=production node server/index.js",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@ffmpeg/core": "^0.8.5",
+    "@ffmpeg/ffmpeg": "^0.9.7",
+    "axios": "^0.19.2",
+    "cross-env": "^5.2.0",
+    "express": "^4.16.4",
+    "nuxt": "^2.0.0",
+    "vue-js-modal": "^2.0.0-rc.3",
+    "webfontloader": "^1.6.28"
+  },
+  "devDependencies": {
+    "@nuxtjs/google-analytics": "^2.3.0",
+    "@nuxtjs/style-resources": "^1.0.0",
+    "node-sass": "^4.13.1",
+    "nodemon": "^1.18.9",
+    "sass-loader": "^8.0.2"
+  }
+}
