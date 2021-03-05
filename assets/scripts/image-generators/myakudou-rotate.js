@@ -2,8 +2,8 @@ import { getCanvas } from '~/assets/scripts/utils/get-canvas'
 import { getAudioPeaks } from '~/assets/scripts/utils/get-audio-peaks'
 
 export const meta = {
-  title: '脈動',
-  description: '音の強弱で画像が大小動くやつです',
+  title: '脈動(回転)',
+  description: '回転しながら音の強弱で画像が大小動くやつです',
   author: 'cagpie'
 }
 
@@ -61,8 +61,22 @@ export async function generate(width, height, fps, isPreview, options) {
     const iconWidth = iconImage.width * iconRatio * (0.5 + peak / 2)
     const iconHeight = iconImage.height * iconRatio * (0.5 + peak / 2)
 
-    context.drawImage(
+    const iconCanvas = getCanvas(iconWidth * 2, iconHeight * 2)
+
+    iconCanvas.context.translate(iconWidth, iconHeight)
+    iconCanvas.context.rotate(idx * 1 * Math.PI / 180);
+    iconCanvas.context.translate(-iconWidth, -iconHeight)
+
+    iconCanvas.context.drawImage(
       iconImage,
+      iconWidth / 2,
+      iconHeight / 2,
+      iconWidth,
+      iconHeight
+    )
+
+    context.drawImage(
+      iconCanvas.canvas,
       (canvas.width / 2) - (iconWidth / 2),
       (canvas.height / 2) - (iconHeight / 2),
       iconWidth,

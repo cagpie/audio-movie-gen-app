@@ -37,8 +37,8 @@ export default {
     },
     tweet () {
       const baseUrl = 'https://twitter.com/intent/tweet?';
-      const text = ['text', 'Clubhouseのアイコンに文字いれるやつ'];
-      const url = ['url', 'https://clubhouse-icon.cagpie.net/'];
+      const text = ['text', 'Audio -> Moview Generator'];
+      const url = ['url', 'https://audio-movie-gen.app'];
       const query = new URLSearchParams([text, url]).toString();
       const shareUrl = `${baseUrl}${query}`;
 

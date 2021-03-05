@@ -9,6 +9,14 @@
       <div class="right-view">
         <div class="input-steps">
           <div class="step">
+            <select v-model="imageGeneratorIdx" @change="updatePreview">
+              <option v-for="(gen, idx) in imageGenerators" :value="idx" :key="idx">
+                {{ gen.meta.title }}
+              </option>
+            </select>
+            {{ imageGenerators[imageGeneratorIdx].meta.description }}
+          </div>
+          <div class="step">
               <label>
               <input @change="selectImage" type="file" accept="image/*" hidden>
               <div class="button input-file" v-if="!iconImage">画像を選択</div>
@@ -23,7 +31,7 @@
             </label>
           </div>
           <div class="step">
-            <textarea @input="updateComment" v-model="text" placeholder="テキストを入力" class="input-text"></textarea>
+            <textarea @input="updatePreview" v-model="text" placeholder="テキストを入力" class="input-text"></textarea>
           </div>
         </div>
 
@@ -91,8 +99,7 @@
 import { createFFmpeg } from '@ffmpeg/ffmpeg'
 
 import { generateVideo } from '~/assets/scripts/cores/generate-video'
-
-import generateImagesMyakudou from '~/assets/scripts/image-generators/myakudou'
+import { imageGenerators } from '~/assets/scripts/image-generators/index'
 
 export default {
   layout: 'default',
@@ -104,6 +111,8 @@ export default {
       canvasWidth: 640,
       canvasHeight: 360,
       fps: 20,
+      imageGenerators: imageGenerators,
+      imageGeneratorIdx: 0,
       audioArrayBuffer: null,
       iconImage: null,
       text: '',
@@ -145,6 +154,7 @@ export default {
         }
 
         if (this.previewCanvases.length) {
+          context.clearRect(0, 0, this.canvas.width, this.canvas.height)
           context.drawImage(
             this.previewCanvases[counter % this.previewCanvases.length],
             0,
@@ -158,7 +168,7 @@ export default {
   methods: {
     async updatePreview() {
       this.isPreviewPause = true
-      this.previewCanvases = await generateImagesMyakudou(
+      this.previewCanvases = await this.imageGenerators[this.imageGeneratorIdx].generate(
         this.canvasWidth,
         this.canvasHeight,
         this.fps,
@@ -198,9 +208,6 @@ export default {
         reader.readAsDataURL(file)
       }
     },
-    updateComment() {
-      this.updatePreview()
-    },
     async save(isPractice) {
       if (!this.audioArrayBuffer) {
         alert('音声ファイルを選択してください')
@@ -210,7 +217,7 @@ export default {
       this.isPreviewPause = true
       this.isRendering = true
 
-      const imageBuffers = await generateImagesMyakudou(
+      const imageBuffers = await this.imageGenerators[this.imageGeneratorIdx].generate(
         this.canvasWidth,
         this.canvasHeight,
         this.fps,
