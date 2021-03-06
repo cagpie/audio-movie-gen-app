@@ -11,6 +11,10 @@ export const meta = {
 export async function generate(width, height, fps, isPreview, options) {
   const { iconImage, colorMain, colorSub, text, maxDuration } = options
 
+  if (!iconImage) {
+    return
+  }
+
   const peaks = await (async () => {
     if (isPreview) {
       return getSampleAudioPeaks(3)

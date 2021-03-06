@@ -9,7 +9,7 @@ export const meta = {
 }
 
 export async function generate(width, height, fps, isPreview, options) {
-  const { iconImage, colorMain, colorSub, text, maxDuration } = options
+  const { colorMain, colorSub, text, maxDuration } = options
 
   const peaks = await (async () => {
     if (isPreview) {
@@ -27,8 +27,6 @@ export async function generate(width, height, fps, isPreview, options) {
   context.textBaseline = "top";
 
   const images = [];
-
-  const iconRatio = (canvas.height * 1.1) / iconImage.height
 
   // 連番画像生成
   peaks.some((peak, idx) => {

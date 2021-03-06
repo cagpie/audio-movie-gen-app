@@ -153,7 +153,7 @@ export default {
         return
       }
 
-      if (this.previewCanvases.length) {
+      if (this.previewCanvases && this.previewCanvases.length) {
         context.clearRect(0, 0, this.canvas.width, this.canvas.height)
         context.drawImage(
           this.previewCanvases[counter % this.previewCanvases.length],
@@ -245,6 +245,11 @@ export default {
           maxDuration: isPractice ? 10 : 140,
         }
       )
+
+      if (!imageBuffers) {
+        alert('画像生成ができませんでした(画像が選択されていないかも？)')
+        return
+      }
 
       const video = await generateVideo(
         this.ffmpeg,
