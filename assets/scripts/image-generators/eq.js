@@ -43,9 +43,12 @@ export async function generate(width, height, fps, isPreview, options) {
     }
 
     const start = Math.floor(idx * audioBuffer.sampleRate / fps)
-    const sliced = channelData.slice(start, start + 2 ** 12)
-    while (sliced.length < 2 ** 12) {
-      sliced.push(0)
+    let sliced = channelData.slice(start, start + 2 ** 12)
+    if (sliced.length < 2 ** 12) {
+      sliced = [...sliced]
+      while (sliced.length < 2 ** 12) {
+        sliced.push(0)
+      }
     }
     const phasors = fft(sliced)
     const magunitudes = fftUtil.fftMag(phasors)
