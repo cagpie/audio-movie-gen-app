@@ -43,7 +43,11 @@ export async function generate(width, height, fps, isPreview, options) {
     }
 
     const start = Math.floor(idx * audioBuffer.sampleRate / fps)
-    const phasors = fft(channelData.slice(start, start + 2 ** 12))
+    const sliced = channelData.slice(start, start + 2 ** 12)
+    while (sliced.length < 2 ** 12) {
+      sliced.push(0)
+    }
+    const phasors = fft(sliced)
     const magunitudes = fftUtil.fftMag(phasors)
 
     // キャンバス初期化

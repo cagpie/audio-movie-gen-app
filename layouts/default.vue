@@ -69,7 +69,7 @@ export default {
     },
     tweet () {
       const baseUrl = 'https://twitter.com/intent/tweet?';
-      const text = ['text', 'Audio -> Moview Generator | 音声ファイルをmp4動画化するWebアプリ'];
+      const text = ['text', 'Audio -> Movie Generator | 音声ファイルをmp4動画化するWebサービス'];
       const url = ['url', 'https://audio-movie-gen.app'];
       const query = new URLSearchParams([text, url]).toString();
       const shareUrl = `${baseUrl}${query}`;
