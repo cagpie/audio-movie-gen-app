@@ -16,7 +16,7 @@
     <div class="app-main">
       <div class="environment-warning" v-if="!isSupportedEnvironment">
         <p>ご利用の環境ではこのサービスが正常に動作しない可能性があります。</p>
-        <p>WindowsまたはMacの Google Chrome が推奨環境です。</p>
+        <p>Windows または Mac の Google Chrome が推奨環境です。</p>
       </div>
       <nuxt />
     </div>
@@ -117,13 +117,6 @@ export default {
     }
   }
 
-  .environment-warning {
-    padding: 24px;
-    text-align: center;
-    color: #f00;
-    font-weight: bold;
-  }
-
   .app-main {
     width: 100%;
     min-height: calc(100vh - 130px);
@@ -132,6 +125,13 @@ export default {
     a {
       color: $bright;
       text-decoration: none;
+    }
+
+    .environment-warning {
+      padding-bottom: 24px;
+      text-align: center;
+      color: #f00;
+      font-weight: bold;
     }
   }
 

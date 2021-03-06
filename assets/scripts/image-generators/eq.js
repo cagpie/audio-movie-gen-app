@@ -1,26 +1,34 @@
 import { getCanvas } from '~/assets/scripts/utils/get-canvas'
-import { getAudioPeaks } from '~/assets/scripts/utils/get-audio-peaks'
-import { getSampleAudioPeaks } from '~/assets/scripts/utils/get-sample-audio-peaks'
+
+import { fft, util as fftUtil } from 'fft-js'
 
 export const meta = {
-  title: '折れ線',
-  description: '波形っぽいのを折れ線でだすやつです\n左上に文字が入れられます',
+  title: '周波数',
+  description: '周波数を出すデモ\n左上に文字が入れられます(色はサブ色)',
   author: 'cagpie'
 }
 
 export async function generate(width, height, fps, isPreview, options) {
   const { colorMain, colorSub, text, maxDuration } = options
 
-  const peaks = await (async () => {
-    if (isPreview) {
-      return getSampleAudioPeaks(1.1)
-    }
+  // プレビューはなし
+  if (isPreview) {
+    const { canvas, context } = getCanvas(width, height)
+    context.font = `42px "游ゴシック体", "Hiragino Kaku Gothic ProN", sans-serif`
+    context.textBaseline = "middle"
+    context.textAlign = "center"
 
-    // 動画用はオーディオからpeaksを決定する
-    const audioContext = new AudioContext()
-    const buffer = await audioContext.decodeAudioData(options.audioArrayBuffer.slice(0, -1))
-    return getAudioPeaks(buffer.getChannelData(0), buffer.sampleRate / fps)
-  })();
+    context.fillStyle = colorSub
+    context.fillRect(0, 0, canvas.width, canvas.height)
+
+    context.fillStyle = colorMain
+    context.fillText('プレビューなし', width / 2, height / 2)
+    return [canvas]
+  }
+
+  const audioContext = new AudioContext()
+  const audioBuffer = await audioContext.decodeAudioData(options.audioArrayBuffer.slice(0, -1))
+  const channelData = audioBuffer.getChannelData(0)
 
   const { canvas, context } = getCanvas(width, height)
   context.font = `20px "游ゴシック体", "Hiragino Kaku Gothic ProN", sans-serif`;
@@ -28,12 +36,15 @@ export async function generate(width, height, fps, isPreview, options) {
 
   const images = [];
 
-  // 連番画像生成
-  peaks.some((peak, idx) => {
+  for (let idx = 0, max = 1000 * channelData.length / audioBuffer.sampleRate / fps; idx < max; idx++) {
     // 終了条件
     if (maxDuration && (idx / fps) >= maxDuration) {
-      return true
+      break;
     }
+
+    const start = Math.floor(idx * audioBuffer.sampleRate / fps)
+    const phasors = fft(channelData.slice(start, start + 2 ** 12))
+    const magunitudes = fftUtil.fftMag(phasors)
 
     // キャンバス初期化
     context.clearRect(0, 0, canvas.width, canvas.height)
@@ -44,13 +55,11 @@ export async function generate(width, height, fps, isPreview, options) {
 
     context.fillStyle = colorMain
     context.beginPath();
-    context.moveTo(0, ((1 - peak) * canvas.height) * 0.5 + (canvas.height / 4))
-    for (let i = 1; i <= 5; i++) {
+    context.moveTo(0, 3 * canvas.height / 4)
+    for (let i = 0; i <= 350; i++) {
       context.lineTo(
-        (canvas.width / 5) * i,
-        (idx - i) < 0
-          ? canvas.height  * 0.5 + (canvas.height / 4)
-          : ((1 - peaks[idx - i]) * canvas.height) * 0.5 + (canvas.height / 4)
+        (canvas.width / 350) * i,
+        ((1 - (magunitudes[i] / 500)) * canvas.height) * 0.5 + (canvas.height / 4)
       )
     }
     context.lineTo(canvas.width, canvas.height)
@@ -62,15 +71,6 @@ export async function generate(width, height, fps, isPreview, options) {
       context.fillText(text, 12, 12)
     }
 
-    // プレビュー用はCanvasのリストを返す
-    if (isPreview) {
-      const temp = getCanvas(width, height)
-      temp.context.drawImage(canvas, 0, 0)
-      images.push(temp.canvas)
-
-      return false
-    }
-
     // 動画用はUint8Arrayのリストを返す
     const dataUrl = canvas.toDataURL();
     const byteString = atob(dataUrl.split(',')[1]);
@@ -79,9 +79,7 @@ export async function generate(width, height, fps, isPreview, options) {
       buffer[i] = byteString.charCodeAt(i);
     }
     images.push(buffer);
-
-    return false
-  });
+  }
 
   return images;
 }
