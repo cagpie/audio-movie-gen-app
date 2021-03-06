@@ -36,7 +36,7 @@ export async function generate(width, height, fps, isPreview, options) {
 
   const images = [];
 
-  for (let idx = 0, max = 1000 * channelData.length / audioBuffer.sampleRate / fps; idx < max; idx++) {
+  for (let idx = 0, max = channelData.length / audioBuffer.sampleRate * fps; idx < max; idx++) {
     // 終了条件
     if (maxDuration && (idx / fps) >= maxDuration) {
       break;
