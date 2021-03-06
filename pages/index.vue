@@ -8,62 +8,60 @@
       </div>
       <div class="right-view">
         <div class="input-steps">
+          <div class="steps-title">▼ 動画パターン</div>
           <div class="step">
             <select v-model="imageGeneratorIdx" @change="updatePreview">
               <option v-for="(gen, idx) in imageGenerators" :value="idx" :key="idx">
                 {{ gen.meta.title }}
               </option>
             </select>
-            {{ imageGenerators[imageGeneratorIdx].meta.description }}
+            <div>
+              {{ imageGenerators[imageGeneratorIdx].meta.description }}
+            </div>
           </div>
+          <div class="steps-title">▼ 基本素材</div>
           <div class="step">
               <label>
-              <input @change="selectImage" type="file" accept="image/*" hidden>
+              <input type="file" accept="image/*" @change="selectImage"  hidden>
               <div class="button input-file" v-if="!iconImage">画像を選択</div>
               <div class="button input-file" v-else>✔︎ 画像を選択済み</div>
             </label>
           </div>
           <div class="step">
             <label>
-              <input @change="selectAudio" type="file" accept="audio/*" hidden>
+              <input type="file" accept="audio/*" @change="selectAudio" hidden>
               <div class="button input-file" v-if="!audioArrayBuffer">音声を選択</div>
                 <div class="button input-file" v-else>✔︎ 音声を選択済み</div>
             </label>
           </div>
+          <div class="steps-title">▼ オプション</div>
           <div class="step">
-            <textarea @input="updatePreview" v-model="text" placeholder="テキストを入力" class="input-text"></textarea>
+            <div class="key-value">
+              <div class="key">メイン色</div>
+              <div class="value">
+                <input type="text" placeholder="#FFAA00" class="input-text" v-model="colorMain" @input="updateOftenPreview" />
+                <div class="color-preview" :style="{ backgroundColor: colorMain }"></div>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="key-value">
+              <div class="key">サブ色</div>
+              <div class="value">
+                <input type="text" placeholder="#000000" class="input-text" v-model="colorSub" @input="updateOftenPreview" />
+                <div class="color-preview" :style="{ backgroundColor: colorSub }"></div>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="key-value">
+              <div class="key">テキスト</div>
+              <div class="value">
+                <textarea placeholder="テキストを入力" class="input-textarea" v-model="text" @input="updateOftenPreview"></textarea>
+              </div>
+            </div>
           </div>
         </div>
-
-        <!-- <div class="step options">
-          <div class="caption">オプション</div>
-          <div>
-            <div>
-              <label>
-                <input type="number" v-model="commentSize" @input="renderComment()" @change="renderComment()">
-                文字サイズ
-              </label>
-            </div>
-            <div>
-              <label>
-                <input type="text" v-model="fillColor" @input="renderComment()" @change="renderComment()">
-                文字色
-              </label>
-            </div>
-            <div>
-              <label>
-                <input type="checkbox" v-model="isStroke" @change="renderComment()">
-                縁取り文字にする
-              </label>
-            </div>
-            <div>
-              <label>
-                <input type="text" v-model="strokeColor" @input="renderComment()" @change="renderComment()" :disabled="!this.isStroke">
-                縁取りの色
-              </label>
-            </div>
-          </div>
-        </div> -->
         <div class="generate-buttons" v-if="!isRendering">
           <div class="button save practice" @click="save(true)">
             <div>出来栄え確認</div>
@@ -116,8 +114,10 @@ export default {
       audioArrayBuffer: null,
       iconImage: null,
       text: '',
+      colorMain: '#eeddcc',
+      colorSub: '#000000',
       videoSrc: null,
-      samplePeaks: [],
+      previewTimer: null,
       previewCanvases: [],
       isPreviewPause: false,
       isRendering: false
@@ -137,33 +137,27 @@ export default {
       this.iconImage.src = storedIconImage
     }
 
-    for (let i = 0; i < 20; i++) {
-      this.samplePeaks.push(((Math.sin(i * Math.PI * 2 / 20) * 0.9 + 1) / 2))
-    }
-
     this.updatePreview()
 
-    setTimeout(() => {
-      const previewLoop = (counter) => {
-        setTimeout(() => {
-          previewLoop(++counter)
-        }, 1000 / this.fps);
+    const previewLoop = (counter) => {
+      setTimeout(() => {
+        previewLoop(++counter)
+      }, 1000 / this.fps);
 
-        if (this.isPreviewPause) {
-          return
-        }
-
-        if (this.previewCanvases.length) {
-          context.clearRect(0, 0, this.canvas.width, this.canvas.height)
-          context.drawImage(
-            this.previewCanvases[counter % this.previewCanvases.length],
-            0,
-            0
-          )
-        }
+      if (this.isPreviewPause) {
+        return
       }
-      previewLoop(0);
-    }, 1000);
+
+      if (this.previewCanvases.length) {
+        context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+        context.drawImage(
+          this.previewCanvases[counter % this.previewCanvases.length],
+          0,
+          0
+        )
+      }
+    }
+    previewLoop(0)
   },
   methods: {
     async updatePreview() {
@@ -174,12 +168,22 @@ export default {
         this.fps,
         true,
         {
-          peaks: this.samplePeaks,
           iconImage: this.iconImage,
+          colorMain: this.colorMain,
+          colorSub: this.colorSub,
           text: this.text
         }
       )
       this.isPreviewPause = false
+    },
+    updateOftenPreview() {
+      if (this.previewTimer) {
+        window.clearTimeout(this.previewTimer)
+      }
+
+      this.previewTimer = setTimeout(async () => {
+        this.updatePreview()
+      }, 500)
     },
     selectAudio(e) {
       const file = e.target.files[0]
@@ -225,6 +229,8 @@ export default {
         {
           audioArrayBuffer: this.audioArrayBuffer,
           iconImage: this.iconImage,
+          colorMain: this.colorMain,
+          colorSub: this.colorSub,
           text: this.text,
           maxDuration: isPractice ? 10 : 140,
         }
@@ -279,6 +285,28 @@ export default {
         .step + .step {
           margin-top: 8px;
         }
+
+        .steps-title {
+          margin-bottom: 12px;
+          font-weight: bold;
+          // text-align: center;
+        }
+
+        .step + .steps-title {
+          margin-top: 20px
+        }
+
+        .key-value {
+          display: flex;
+          .key {
+            flex: 1;
+            line-height: 1.75
+          }
+          .value {
+            flex: 3;
+            display: flex;
+          }
+        }
       }
 
       .input-file.button {
@@ -289,6 +317,27 @@ export default {
       }
 
       .input-text {
+        outline: 0;
+        appearance: none;
+        width: 100%;
+        height: 1.75em;
+        padding: 0.5em;
+        line-height: 1.5em;
+        font-size: 16px;
+        border: 2px solid $bright;
+        border-radius: $border-radius;
+      }
+
+      .color-preview {
+        width: 28px;
+        height: 28px;
+        border-radius: 4px;
+      }
+      .input-text + .color-preview {
+        margin-left: 12px;
+      }
+
+      .input-textarea {
         resize: none;
         outline: 0;
         appearance: none;
@@ -303,7 +352,7 @@ export default {
 
       .generate-buttons {
         display: flex;
-        margin-top: 16px;
+        margin-top: 24px;
 
         .button.save {
           flex: 1;
@@ -325,20 +374,6 @@ export default {
         }
       }
     }
-
-    // .options {
-    //   // input[type="number"] {
-    //   //   width: 5em;
-    //   // }
-    //   input[type="text"],
-    //   input[type="number"] {
-    //     font-size: 16px;
-    //   }
-    // }
-    // .save {
-    //   color: $white;
-    //   background-color: $bright;
-    // }
   }
 
   .modal {

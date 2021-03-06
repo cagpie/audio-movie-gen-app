@@ -1,5 +1,6 @@
 import { getCanvas } from '~/assets/scripts/utils/get-canvas'
 import { getAudioPeaks } from '~/assets/scripts/utils/get-audio-peaks'
+import { getSampleAudioPeaks } from '~/assets/scripts/utils/get-sample-audio-peaks'
 
 export const meta = {
   title: '脈動(回転)',
@@ -7,27 +8,12 @@ export const meta = {
   author: 'cagpie'
 }
 
-/*
- *  isPreview = true のとき
- *    プレビューで使う用 返り値はCanvasのリストになる
- *    options = {
- *      peaks: [],
- *      iconImage: Image
- *    }
- *
- *  isPreview = false のとき
- *    動画生成で使う用 返り値はUint8Arrayのリストになる
- *    options = {
- *      audioArrayBuffer: ArrayBuffer,
- *      iconImage: Image
- *    }
- */
 export async function generate(width, height, fps, isPreview, options) {
-  const { iconImage, text, maxDuration } = options
+  const { iconImage, colorMain, colorSub, text, maxDuration } = options
 
   const peaks = await (async () => {
     if (isPreview) {
-      return options.peaks
+      return getSampleAudioPeaks(3)
     }
 
     // 動画用はオーディオからpeaksを決定する
@@ -55,7 +41,7 @@ export async function generate(width, height, fps, isPreview, options) {
     context.clearRect(0, 0, canvas.width, canvas.height)
 
     // 画像にしたいものを描画
-    context.fillStyle = '#eee'
+    context.fillStyle = colorMain
     context.fillRect(0, 0, canvas.width, canvas.height)
 
     const iconWidth = iconImage.width * iconRatio * (0.5 + peak / 2)
@@ -84,7 +70,7 @@ export async function generate(width, height, fps, isPreview, options) {
     )
 
     if (text) {
-      context.fillStyle = '#000'
+      context.fillStyle = colorSub
       context.fillText(text, 12, 12)
     }
 
