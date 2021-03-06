@@ -1,6 +1,10 @@
-# pianopost
+# audio-movie-gen-app
 
-> My stupendous Nuxt.js project
+https://audio-moive-gen.app
+
+このサービスの核の部分は [ffmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm) でできています
+
+[ffmpeg](https://ffmpeg.org/) および [ffmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm) に感謝🙏
 
 ## Build Setup
 

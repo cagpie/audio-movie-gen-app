@@ -67,10 +67,10 @@ export async function generate(width, height, fps, isPreview, options) {
 
     context.drawImage(
       iconCanvas.canvas,
-      (canvas.width / 2) - (iconWidth / 2),
-      (canvas.height / 2) - (iconHeight / 2),
-      iconWidth,
-      iconHeight
+      (canvas.width / 2) - (iconWidth / 1),
+      (canvas.height / 2) - (iconHeight / 1),
+      iconWidth * 2,
+      iconHeight * 2
     )
 
     if (text) {
