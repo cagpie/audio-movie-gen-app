@@ -3,33 +3,11 @@ import { getAudioPeaks } from '~/assets/scripts/utils/get-audio-peaks'
 import { getSampleAudioPeaks } from '~/assets/scripts/utils/get-sample-audio-peaks'
 
 export const meta = {
-  title: '脈動',
-  description: '音の強弱で画像が大小動くやつです\n左上に文字が入れられます(色はサブ色)',
+  title: '折れ線',
+  description: '折れ線のやつです\n左上に文字が入れられます(色はサブ色)',
   author: 'cagpie'
 }
 
-/*
- *  isPreview = true のとき
- *    プレビューで使う用 返り値はCanvasのリストになる
- *    options = {
- *      iconImage: Image
- *      colorMain: string,
- *      colorSub: string,
- *      text: string,
- *      maxDuration: number
- *    }
- *
- *  isPreview = false のとき
- *    動画生成で使う用 返り値はUint8Arrayのリストになる
- *    options = {
- *      audioArrayBuffer: ArrayBuffer,
- *      iconImage: Image,
- *      colorMain: string,
- *      colorSub: string,
- *      text: string,
- *      maxDuration: number
- *    }
- */
 export async function generate(width, height, fps, isPreview, options) {
   const { iconImage, colorMain, colorSub, text, maxDuration } = options
 
@@ -63,22 +41,26 @@ export async function generate(width, height, fps, isPreview, options) {
     context.clearRect(0, 0, canvas.width, canvas.height)
 
     // 画像にしたいものを描画
-    context.fillStyle = colorMain
+    context.fillStyle = colorSub
     context.fillRect(0, 0, canvas.width, canvas.height)
 
-    const iconWidth = iconImage.width * iconRatio * (0.5 + peak / 2)
-    const iconHeight = iconImage.height * iconRatio * (0.5 + peak / 2)
-
-    context.drawImage(
-      iconImage,
-      (canvas.width / 2) - (iconWidth / 2),
-      (canvas.height / 2) - (iconHeight / 2),
-      iconWidth,
-      iconHeight
-    )
+    context.fillStyle = colorMain
+    context.beginPath();
+    context.moveTo(0, ((1 - peak) * canvas.height) * 0.5 + (canvas.height / 4))
+    for (let i = 1; i <= 5; i++) {
+      context.lineTo(
+        (canvas.width / 5) * i,
+        (idx - i) < 0
+          ? canvas.height  * 0.5 + (canvas.height / 4)
+          : ((1 - peaks[idx - i]) * canvas.height) * 0.5 + (canvas.height / 4)
+      )
+    }
+    context.lineTo(canvas.width, canvas.height)
+    context.lineTo(0, canvas.height)
+    context.fill();
 
     if (text) {
-      context.fillStyle = colorSub
+      context.fillStyle = colorMain
       context.fillText(text, 12, 12)
     }
 

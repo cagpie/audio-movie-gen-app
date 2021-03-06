@@ -4,7 +4,7 @@ import { getSampleAudioPeaks } from '~/assets/scripts/utils/get-sample-audio-pea
 
 export const meta = {
   title: '脈動(回転)',
-  description: '回転しながら音の強弱で画像が大小動くやつです',
+  description: '回転しながら音の強弱で画像が大小動きます\n左上に文字が入れられます(色はサブ色)',
   author: 'cagpie'
 }
 

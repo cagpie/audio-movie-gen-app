@@ -15,8 +15,7 @@
                 {{ gen.meta.title }}
               </option>
             </select>
-            <div>
-              {{ imageGenerators[imageGeneratorIdx].meta.description }}
+            <div class="image-generator-description" v-text="imageGenerators[imageGeneratorIdx].meta.description">
             </div>
           </div>
           <div class="steps-title">▼ 基本素材</div>
@@ -114,8 +113,8 @@ export default {
       audioArrayBuffer: null,
       iconImage: null,
       text: '',
-      colorMain: '#eeddcc',
-      colorSub: '#000000',
+      colorMain: '#dddddd',
+      colorSub: '#333333',
       videoSrc: null,
       previewTimer: null,
       previewCanvases: [],
@@ -136,6 +135,12 @@ export default {
       this.iconImage = new Image()
       this.iconImage.src = storedIconImage
     }
+
+    const storedColorMain = window.localStorage.getItem('colorMain')
+    this.colorMain = storedColorMain || this.colorMain
+
+    const storedColorSub = window.localStorage.getItem('colorSub')
+    this.colorSub = storedColorSub || this.colorSub
 
     this.updatePreview()
 
@@ -183,6 +188,9 @@ export default {
 
       this.previewTimer = setTimeout(async () => {
         this.updatePreview()
+
+        window.localStorage.setItem('colorMain', this.colorMain)
+        window.localStorage.setItem('colorSub', this.colorSub)
       }, 500)
     },
     selectAudio(e) {
@@ -263,9 +271,13 @@ export default {
 
     .left-view {
       flex: 2;
+      max-width: 640px;
 
       .canvas {
         background-color: #eee;
+        > canvas {
+          display: block;
+        }
       }
     }
 
@@ -294,6 +306,11 @@ export default {
 
         .step + .steps-title {
           margin-top: 20px
+        }
+
+        .image-generator-description {
+          margin-top: 8px;
+          white-space: pre-wrap;
         }
 
         .key-value {
@@ -334,7 +351,7 @@ export default {
         border-radius: 4px;
       }
       .input-text + .color-preview {
-        margin-left: 12px;
+        margin-left: 8px;
       }
 
       .input-textarea {
