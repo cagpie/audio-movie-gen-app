@@ -4,7 +4,7 @@ import { getSampleAudioPeaks } from '~/assets/scripts/utils/get-sample-audio-pea
 
 export const meta = {
   title: '折れ線',
-  description: '折れ線のやつです\n左上に文字が入れられます(色はサブ色)',
+  description: '波形っぽいのを折れ線でだすやつです\n左上に文字が入れられます(色はメイン色)',
   author: 'cagpie'
 }
 
