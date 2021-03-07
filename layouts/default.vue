@@ -22,13 +22,10 @@
     </div>
     <footer class="app-footer">
       <div class="footer-item">
-        ©︎ 2021 Audio -> Movie Generator (v0.4.0)
+        ©︎ 2021 Audio -> Movie Generator (v0.4.2)
       </div>
       <div class="footer-item">
         <a href="https://twitter.com/cagpie" target="_blank">Twitter (@cagpie)</a>
-      </div>
-      <div class="footer-item">
-        <a href="https://github.com/cagpie/audio-movie-gen-app" target="_blank">GitHub (cagpie/audio-movie-gen-app)</a>
       </div>
     </footer>
     <modal name="terms-modal">

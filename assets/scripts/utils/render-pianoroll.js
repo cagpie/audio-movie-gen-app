@@ -19,8 +19,8 @@ function drawPianoRollBeats (data, canvas, tempCanvases, canvasRatio) {
       if (!tempCanvas) return;
 
       const context = tempCanvas.getContext('2d');
-      context.fillStyle = '#00f';
-      context.globalAlpha = ((cnt % beat.value[0]) === 0) ? 0.3 : 0.1;
+      context.fillStyle = '#000';
+      context.globalAlpha = ((cnt % beat.value[0]) === 0) ? 0.2 : 0.1;
       context.fillRect(i/canvasRatio%canvas.width, 0, 1, canvas.height);
 
       i += data.header.resolution/(beat.value[1]/4);
@@ -68,9 +68,9 @@ function drawPianoRollNotes (data, canvas, tempCanvases, options) {
   } = options
 
   const percussionNote = {
-    y: [0, noteHeight/4, noteHeight/4, noteHeight/4],
-    h: [noteHeight, noteHeight/2, noteHeight/2, noteHeight/2],
-    a: [1, 0.9, 0.6, 0.2]
+    y: [0, 0, 0, 0, noteHeight/4, noteHeight/4],
+    h: [noteHeight, noteHeight, noteHeight, noteHeight, noteHeight/2, noteHeight/2],
+    a: [1, 1, 1, 0.9, 0.6, 0.2]
   }
 
   for (let i=data.channels.length-1; i>=0; i--) {
@@ -115,11 +115,11 @@ function drawPianoRollNotes (data, canvas, tempCanvases, options) {
             };
 
             context.fillStyle = ChannelColor[note.channel];
-            context.globalAlpha = note.velocity*(expression/127);
+            context.globalAlpha = note.velocity*(expression/127) * 0.5 + 0.5;
 
             // パーカッション
             if(note.channel === 9){
-              for(let p=0; p<3; p++){
+              for(let p=0; p<6; p++){
                 const _tempCanvas = tempCanvases[Math.floor((x/canvasRatio + p)/canvas.width) + c];
                 const _context = _tempCanvas.getContext('2d');
 
@@ -201,9 +201,6 @@ export function rendering (x, canvas, context, tempCanvases) {
     return(a*b<0)*b+a%b
   }
 
-  context.fillStyle = "#fff"
-  context.fillRect(0, 0, canvas.width, canvas.height)
-
   // ピアノロール描画
   let canvasW = tempCanvases[0] ? tempCanvases[0].width : canvas.width
   if (true) {
@@ -240,4 +237,34 @@ export function rendering (x, canvas, context, tempCanvases) {
     context.fillStyle = '#888';
     context.fillRect(Math.floor((x+canvas.width/2)%(canvasW+subW)), 0, 1, canvas.height);
   }
+}
+
+export function getBackgroundCanvas(width, height, noteHeight, bottomMargin) {
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+
+  const context = canvas.getContext('2d')
+
+  for (let i = 0; i < 128; i++) {
+    if ([1, 3, 6, 8, 10].some(k => (i % 12 === k))) {
+      context.fillStyle = '#eee'
+      context.fillRect(
+        0,
+        (128 * noteHeight) - ((i - 9) * noteHeight) - bottomMargin, // なぜ9...?
+        canvas.width,
+        noteHeight
+      )
+    } else if (i % 12 === 11) {
+      context.fillStyle = '#ccc'
+      context.fillRect(
+        0,
+        (128 * noteHeight) - ((i - 9) * noteHeight) - bottomMargin,
+        canvas.width,
+        1
+      )
+    }
+  }
+
+  return canvas
 }

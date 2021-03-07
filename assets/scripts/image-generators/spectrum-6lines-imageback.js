@@ -3,10 +3,12 @@ import { getSampleAudioPeaks } from '~/assets/scripts/utils/get-sample-audio-pea
 import { getFullAudioMagnitudesPeaksList } from '~/assets/scripts/utils/get-audio-magnitudes'
 
 export const meta = {
-  title: 'スペクトラム 6 line',
+  title: 'スペクトラム6線(画像背景)',
   description: '処理が重めです',
   author: 'cagpie',
-  requires: {}
+  requires: {
+    image: true
+  }
 }
 
 export async function generate(width, height, fps, isPreview, options) {
@@ -48,8 +50,10 @@ export async function generate(width, height, fps, isPreview, options) {
   context.font = `20px "游ゴシック体", "Hiragino Kaku Gothic ProN", sans-serif`;
   context.textBaseline = "top";
 
-  const images = [];
+  const imageHeight = iconImage.height * (canvas.width / iconImage.width)
+  const imageY = (canvas.height - imageHeight) / 2
 
+  const images = [];
 
   // 連番画像生成
   peaksList[0].some((peak, idx) => {
@@ -65,13 +69,20 @@ export async function generate(width, height, fps, isPreview, options) {
     context.fillStyle = colorSub
     context.fillRect(0, 0, canvas.width, canvas.height)
 
+    context.drawImage(
+      iconImage,
+      0,
+      imageY,
+      canvas.width,
+      imageHeight
+    )
 
     context.fillStyle = colorMain
     peaksList.forEach((peaks, j) => {
       const rectHeight = peaks[idx] * canvas.height * 0.5 + 4
 
       context.fillRect(
-        (canvas.width / 2) - (255 / 2) + j * 45,
+        (canvas.width / 2) - (255 / 2) + j * 50,
         (canvas.height / 2) - (rectHeight / 2),
         5,
         rectHeight

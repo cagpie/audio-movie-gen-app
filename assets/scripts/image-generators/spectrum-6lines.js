@@ -1,32 +1,45 @@
 import { getCanvas } from '~/assets/scripts/utils/get-canvas'
-import { getAudioPeaks } from '~/assets/scripts/utils/get-audio-peaks'
 import { getSampleAudioPeaks } from '~/assets/scripts/utils/get-sample-audio-peaks'
+import { getFullAudioMagnitudesPeaksList } from '~/assets/scripts/utils/get-audio-magnitudes'
 
 export const meta = {
-  title: '脈動(回転)',
-  description: '回転しながら音の強弱で画像が大小動きます\n左上に文字が入れられます(色はサブ色)',
+  title: 'スペクトラム6線',
+  description: '処理が重めです',
   author: 'cagpie',
   requires: {
-    image: true
+    image: false
   }
 }
 
 export async function generate(width, height, fps, isPreview, options) {
-  const { iconImage, colorMain, colorSub, text, maxDuration } = options
+  const { colorMain, colorSub, text, maxDuration } = options
 
-  if (!iconImage) {
-    return
-  }
-
-  const peaks = await (async () => {
+  const peaksList = await (async () => {
     if (isPreview) {
-      return getSampleAudioPeaks(3)
+      return [
+        getSampleAudioPeaks(1),
+        getSampleAudioPeaks(1),
+        getSampleAudioPeaks(1),
+        getSampleAudioPeaks(1),
+        getSampleAudioPeaks(1),
+        getSampleAudioPeaks(1),
+      ]
     }
 
     // 動画用はオーディオからpeaksを決定する
     const audioContext = new AudioContext()
     const buffer = await audioContext.decodeAudioData(options.audioArrayBuffer.slice(0, -1))
-    return getAudioPeaks(buffer.getChannelData(0), buffer.sampleRate / fps)
+
+    const peaksList = getFullAudioMagnitudesPeaksList(
+      [1, 2, 4, 8, 16, 32],
+      buffer.getChannelData(0),
+      buffer.sampleRate,
+      fps,
+      2 ** 8,
+      maxDuration
+    )
+
+    return peaksList
   })();
 
   const { canvas, context } = getCanvas(width, height)
@@ -35,10 +48,9 @@ export async function generate(width, height, fps, isPreview, options) {
 
   const images = [];
 
-  const iconRatio = (canvas.height * 1.1) / iconImage.height
 
   // 連番画像生成
-  peaks.some((peak, idx) => {
+  peaksList[0].some((peak, idx) => {
     // 終了条件
     if (maxDuration && (idx / fps) >= maxDuration) {
       return true
@@ -48,36 +60,24 @@ export async function generate(width, height, fps, isPreview, options) {
     context.clearRect(0, 0, canvas.width, canvas.height)
 
     // 画像にしたいものを描画
-    context.fillStyle = colorMain
+    context.fillStyle = colorSub
     context.fillRect(0, 0, canvas.width, canvas.height)
 
-    const iconWidth = iconImage.width * iconRatio * (0.5 + peak / 2)
-    const iconHeight = iconImage.height * iconRatio * (0.5 + peak / 2)
 
-    const iconCanvas = getCanvas(iconWidth * 2, iconHeight * 2)
+    context.fillStyle = colorMain
+    peaksList.forEach((peaks, j) => {
+      const rectHeight = peaks[idx] * canvas.height * 0.5 + 4
 
-    iconCanvas.context.translate(iconWidth, iconHeight)
-    iconCanvas.context.rotate(idx * 1 * Math.PI / 180);
-    iconCanvas.context.translate(-iconWidth, -iconHeight)
-
-    iconCanvas.context.drawImage(
-      iconImage,
-      iconWidth / 2,
-      iconHeight / 2,
-      iconWidth,
-      iconHeight
-    )
-
-    context.drawImage(
-      iconCanvas.canvas,
-      (canvas.width / 2) - (iconWidth / 1),
-      (canvas.height / 2) - (iconHeight / 1),
-      iconWidth * 2,
-      iconHeight * 2
-    )
+      context.fillRect(
+        (canvas.width / 2) - (255 / 2) + j * 50,
+        (canvas.height / 2) - (rectHeight / 2),
+        5,
+        rectHeight
+      )
+    })
 
     if (text) {
-      context.fillStyle = colorSub
+      context.fillStyle = colorMain
       context.fillText(text, 12, 12)
     }
 

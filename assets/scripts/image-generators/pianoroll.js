@@ -1,13 +1,14 @@
 import PicoAudio from 'pico-audio-js'
 
 import { getCanvas } from '~/assets/scripts/utils/get-canvas'
-import { prerendering, rendering } from '~/assets/scripts/utils/render-pianoroll'
+import { prerendering, rendering, getBackgroundCanvas } from '~/assets/scripts/utils/render-pianoroll'
 
 export const meta = {
   title: 'ピアノロール',
-  description: '音声ファイルの他に、MIDIファイルが必要です',
+  description: '音声ファイルの他に、MIDIファイルが必要です\nオーディオとMIDIで頭の空白などが揃っている必要があります',
   author: 'cagpie',
   requires: {
+    image: false,
     smf: true
   }
 }
@@ -26,12 +27,17 @@ export async function generate(width, height, fps, isPreview, options) {
   const picoAudio = new PicoAudio()
   const parsedSmf = picoAudio.parseSMF(smfArrayBuffer)
   picoAudio.setData(parsedSmf)
-  const canvasRatio = 10
+
+  const canvasRatio = 15
+  const noteHeight = 4
+  const bottomMargin = 60
   const tempCanvases = prerendering(parsedSmf, canvas, {
     canvasRatio: canvasRatio,
-    noteHeight: 4,
-    canvasBottomMargin: 60
+    noteHeight: noteHeight,
+    canvasBottomMargin: bottomMargin
   })
+
+  const backgroundCanvas = getBackgroundCanvas(width, height, noteHeight, bottomMargin)
 
   const images = [];
 
@@ -55,6 +61,11 @@ export async function generate(width, height, fps, isPreview, options) {
 
     // キャンバス初期化
     context.clearRect(0, 0, canvas.width, canvas.height)
+
+    context.fillStyle = '#fff'
+    context.fillRect(0, 0, canvas.width, canvas.height)
+
+    context.drawImage(backgroundCanvas, 0, 0)
 
     rendering(
       picoAudio.getTiming(idx / fps) / canvasRatio - (canvas.width / 2),

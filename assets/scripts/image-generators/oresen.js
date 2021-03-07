@@ -6,7 +6,9 @@ export const meta = {
   title: '折れ線',
   description: '波形っぽいのを折れ線でだすやつです\n左上に文字が入れられます',
   author: 'cagpie',
-  requires: {}
+  requires: {
+    image: false
+  }
 }
 
 export async function generate(width, height, fps, isPreview, options) {

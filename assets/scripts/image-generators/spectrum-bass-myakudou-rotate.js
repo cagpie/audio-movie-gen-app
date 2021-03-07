@@ -4,9 +4,11 @@ import { getFullAudioMagnitudesPeaks } from '~/assets/scripts/utils/get-audio-ma
 
 export const meta = {
   title: 'スペクトラム低音脈動(回転)',
-  description: '回転しながら低音の強弱で画像が大小動きます\n左上に文字が入れられます(色はサブ色)\n処理が重めです',
+  description: '回転しながら低音の強弱で画像が大小動きます\n左上に文字が入れられます(色はサブ色)\n処理が重めです\nしかもあんまりうまく動いてくれません',
   author: 'cagpie',
-  requires: {}
+  requires: {
+    image: true
+  }
 }
 
 export async function generate(width, height, fps, isPreview, options) {

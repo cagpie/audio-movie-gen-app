@@ -19,7 +19,14 @@
             </div>
           </div>
           <div class="steps-title">▼ 基本素材</div>
-          <div class="step">
+          <div class="step" v-if="imageGenerators[imageGeneratorIdx].meta.requires.smf">
+            <label>
+              <input type="file" accept="audio/midi" @change="selectMidiFile" hidden>
+              <div class="button input-file" v-if="!smfArrayBuffer">MIDIファイルを選択</div>
+                <div class="button input-file" v-else>✔︎ MIDIファイルを選択済み</div>
+            </label>
+          </div>
+          <div class="step" v-if="imageGenerators[imageGeneratorIdx].meta.requires.image">
               <label>
               <input type="file" accept="image/*" @change="selectImage"  hidden>
               <div class="button input-file" v-if="!iconImage">画像を選択</div>
@@ -31,13 +38,6 @@
               <input type="file" accept="audio/*" @change="selectAudio" hidden>
               <div class="button input-file" v-if="!audioArrayBuffer">音声を選択</div>
                 <div class="button input-file" v-else>✔︎ 音声を選択済み</div>
-            </label>
-          </div>
-          <div class="step" v-if="imageGenerators[imageGeneratorIdx].meta.requires.smf">
-            <label>
-              <input type="file" accept="audio/midi" @change="selectMidiFile" hidden>
-              <div class="button input-file" v-if="!smfArrayBuffer">MIDIファイルを選択</div>
-                <div class="button input-file" v-else>✔︎ MIDIファイルを選択済み</div>
             </label>
           </div>
           <div class="steps-title">▼ オプション</div>

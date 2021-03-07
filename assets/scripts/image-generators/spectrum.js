@@ -5,7 +5,9 @@ export const meta = {
   title: 'スペクトラム雑',
   description: '周波数を出すデモ\n計算処理が多くブラウザが固まるように見えますが、気長にお待ちください',
   author: 'cagpie',
-  requires: {}
+  requires: {
+    image: false
+  }
 }
 
 export async function generate(width, height, fps, isPreview, options) {
@@ -57,7 +59,7 @@ export async function generate(width, height, fps, isPreview, options) {
     for (let i = 0; i <= 350; i++) {
       context.lineTo(
         (canvas.width / 350) * i,
-        ((1 - (magnitudes[i] / 500)) * canvas.height) * 0.5 + (canvas.height / 4)
+        ((1 - (magnitudes[i] / 50)) * canvas.height) * 0.5 + (canvas.height / 4)
       )
     }
     context.lineTo(canvas.width, canvas.height)
