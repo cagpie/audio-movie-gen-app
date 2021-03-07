@@ -16,7 +16,7 @@ module.exports = {
       { property: 'og:type', content: 'website' },
       { property: 'og:url', content: 'https://audio-movie-gen.app' },
       { property: 'og:description', content: '音声ファイルからmp4動画を生成するやつ' },
-      { property: 'og:image', content: 'https://audio-movie-gen.app' },
+      { property: 'og:image', content: 'https://audio-movie-gen.app/icon.png' },
       { name: 'twitter:card', content: 'summary' }
     ],
     script: [
