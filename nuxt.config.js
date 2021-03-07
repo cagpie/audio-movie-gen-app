@@ -12,14 +12,16 @@ module.exports = {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: '音声ファイルからmp4動画を生成するやつ' },
       { property: 'og:site_name', content: 'Audio -> Movie Generator' },
-      { property: 'og:title', content: 'Audio -> Movie GeneratorZ' },
+      { property: 'og:title', content: 'Audio -> Movie Generator' },
       { property: 'og:type', content: 'website' },
       { property: 'og:url', content: 'https://audio-movie-gen.app' },
       { property: 'og:description', content: '音声ファイルからmp4動画を生成するやつ' },
       { property: 'og:image', content: 'https://audio-movie-gen.app' },
       { name: 'twitter:card', content: 'summary' }
     ],
-    script: [],
+    script: [
+      { src: 'https://unpkg.com/@ffmpeg/ffmpeg@0.9.5/dist/ffmpeg.min.js' }
+    ],
     link: [
        { rel: 'icon', type: 'image/x-icon', href: '/icon.png' }
     ]
@@ -48,7 +50,7 @@ module.exports = {
   */
   buildModules: [
     ['@nuxtjs/google-analytics', {
-      id: 'G-NQ6EHBTJ1G'
+      id: 'G-JJPDCM10ZW'
     }]
   ],
   debug: {

@@ -1,10 +1,9 @@
 import { getCanvas } from '~/assets/scripts/utils/get-canvas'
-
-import { fft, util as fftUtil } from 'fft-js'
+import { getFullAudioMagnitudesList } from '~/assets/scripts/utils/get-audio-magnitudes'
 
 export const meta = {
-  title: '周波数',
-  description: '周波数を出すデモ\n左上に文字が入れられます(色はサブ色)',
+  title: 'スペクトラム雑',
+  description: '周波数を出すデモ\n計算処理が多くブラウザが固まるように見えますが、気長にお待ちください',
   author: 'cagpie'
 }
 
@@ -30,28 +29,19 @@ export async function generate(width, height, fps, isPreview, options) {
   const audioBuffer = await audioContext.decodeAudioData(options.audioArrayBuffer.slice(0, -1))
   const channelData = audioBuffer.getChannelData(0)
 
+  const magnitudesList = getFullAudioMagnitudesList(channelData, audioBuffer.sampleRate, fps, 2 ** 10, maxDuration)
+
   const { canvas, context } = getCanvas(width, height)
   context.font = `20px "游ゴシック体", "Hiragino Kaku Gothic ProN", sans-serif`;
   context.textBaseline = "top";
 
   const images = [];
 
-  for (let idx = 0, max = channelData.length / audioBuffer.sampleRate * fps; idx < max; idx++) {
+  magnitudesList.some((magnitudes, idx) => {
     // 終了条件
     if (maxDuration && (idx / fps) >= maxDuration) {
-      break;
+      return true
     }
-
-    const start = Math.floor(idx * audioBuffer.sampleRate / fps)
-    let sliced = channelData.slice(start, start + 2 ** 12)
-    if (sliced.length < 2 ** 12) {
-      sliced = [...sliced]
-      while (sliced.length < 2 ** 12) {
-        sliced.push(0)
-      }
-    }
-    const phasors = fft(sliced)
-    const magunitudes = fftUtil.fftMag(phasors)
 
     // キャンバス初期化
     context.clearRect(0, 0, canvas.width, canvas.height)
@@ -66,7 +56,7 @@ export async function generate(width, height, fps, isPreview, options) {
     for (let i = 0; i <= 350; i++) {
       context.lineTo(
         (canvas.width / 350) * i,
-        ((1 - (magunitudes[i] / 500)) * canvas.height) * 0.5 + (canvas.height / 4)
+        ((1 - (magnitudes[i] / 500)) * canvas.height) * 0.5 + (canvas.height / 4)
       )
     }
     context.lineTo(canvas.width, canvas.height)
@@ -86,7 +76,9 @@ export async function generate(width, height, fps, isPreview, options) {
       buffer[i] = byteString.charCodeAt(i);
     }
     images.push(buffer);
-  }
+
+    return false
+  })
 
   return images;
 }

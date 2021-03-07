@@ -11,8 +11,6 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "@ffmpeg/core": "^0.8.5",
-    "@ffmpeg/ffmpeg": "^0.9.7",
     "axios": "^0.19.2",
     "cross-env": "^5.2.0",
     "express": "^4.16.4",

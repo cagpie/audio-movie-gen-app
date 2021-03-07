@@ -93,8 +93,6 @@
 </template>
 
 <script>
-import { createFFmpeg } from '@ffmpeg/ffmpeg'
-
 import { generateVideo } from '~/assets/scripts/cores/generate-video'
 import { imageGenerators } from '~/assets/scripts/image-generators/index'
 
@@ -123,6 +121,7 @@ export default {
     }
   },
   mounted() {
+    const { createFFmpeg } = window.FFmpeg;
     this.ffmpeg = createFFmpeg({ log: true })
     this.ffmpeg.load()
       .then(() => { this.isFfmpegLoaded = true })
@@ -417,6 +416,4 @@ export default {
     }
   }
 }
-
-
 </style>
