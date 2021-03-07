@@ -102,6 +102,7 @@
 <script>
 import { generateVideo } from '~/assets/scripts/cores/generate-video'
 import { imageGenerators } from '~/assets/scripts/image-generators/index'
+import { renderEndingWatermark } from '~/assets/scripts/utils/render-ending-watermark'
 
 export default {
   layout: 'default',
@@ -272,6 +273,10 @@ export default {
       if (!imageBuffers) {
         alert('画像生成ができませんでした(画像が選択されていないかも？)')
         return
+      }
+
+      if (!isPractice) {
+        await renderEndingWatermark(imageBuffers, 3 * this.fps)
       }
 
       const video = await generateVideo(

@@ -49,9 +49,13 @@ module.exports = {
   ** Nuxt.js dev-modules
   */
   buildModules: [
-    ['@nuxtjs/google-analytics', {
-      id: 'G-JJPDCM10ZW'
-    }]
+    [
+      '@nuxtjs/google-gtag',
+      {
+        id: 'G-JJPDCM10ZW',
+        debug: true
+      }
+    ]
   ],
   debug: {
     enabled: true,

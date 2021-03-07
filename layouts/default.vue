@@ -22,7 +22,7 @@
     </div>
     <footer class="app-footer">
       <div class="footer-item">
-        ©︎ 2021 Audio -> Movie Generator (v0.4.2)
+        ©︎ 2021 Audio -> Movie Generator (v0.4.3)
       </div>
       <div class="footer-item">
         <a href="https://twitter.com/cagpie" target="_blank">Twitter (@cagpie)</a>
@@ -77,7 +77,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+
+
 .app {
   justify-content: center;
   width: 1000px;
