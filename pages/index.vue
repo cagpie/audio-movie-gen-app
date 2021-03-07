@@ -33,6 +33,13 @@
                 <div class="button input-file" v-else>✔︎ 音声を選択済み</div>
             </label>
           </div>
+          <div class="step" v-if="imageGenerators[imageGeneratorIdx].meta.requires.smf">
+            <label>
+              <input type="file" accept="audio/midi" @change="selectMidiFile" hidden>
+              <div class="button input-file" v-if="!smfArrayBuffer">MIDIファイルを選択</div>
+                <div class="button input-file" v-else>✔︎ MIDIファイルを選択済み</div>
+            </label>
+          </div>
           <div class="steps-title">▼ オプション</div>
           <div class="step">
             <div class="key-value">
@@ -113,6 +120,7 @@ export default {
       text: '',
       colorMain: '#dddddd',
       colorSub: '#333333',
+      smfArrayBuffer: null,
       videoSrc: null,
       previewTimer: null,
       previewCanvases: [],
@@ -175,7 +183,9 @@ export default {
           iconImage: this.iconImage,
           colorMain: this.colorMain,
           colorSub: this.colorSub,
-          text: this.text
+          text: this.text,
+          smfArrayBuffer: this.smfArrayBuffer,
+          maxDuration: 2
         }
       )
       this.isPreviewPause = false
@@ -221,6 +231,19 @@ export default {
         reader.readAsDataURL(file)
       }
     },
+    selectMidiFile(e) {
+      const file = e.target.files[0]
+      const reader = new FileReader()
+      reader.onload = () => {
+        this.smfArrayBuffer = reader.result
+
+        this.updatePreview()
+      }
+
+      if (file && file.type.match('audio.*')) {
+        reader.readAsArrayBuffer(file)
+      }
+    },
     async save(isPractice) {
       if (!this.audioArrayBuffer) {
         alert('音声ファイルを選択してください')
@@ -241,6 +264,7 @@ export default {
           colorMain: this.colorMain,
           colorSub: this.colorSub,
           text: this.text,
+          smfArrayBuffer: this.smfArrayBuffer,
           maxDuration: isPractice ? 10 : 140,
         }
       )

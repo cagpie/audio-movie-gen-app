@@ -22,7 +22,7 @@
     </div>
     <footer class="app-footer">
       <div class="footer-item">
-        ©︎ 2021 Audio -> Movie Generator (v0.3.5)
+        ©︎ 2021 Audio -> Movie Generator (v0.4.0)
       </div>
       <div class="footer-item">
         <a href="https://twitter.com/cagpie" target="_blank">Twitter (@cagpie)</a>

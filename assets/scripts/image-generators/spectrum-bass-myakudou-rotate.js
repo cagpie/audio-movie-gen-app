@@ -3,9 +3,10 @@ import { getSampleAudioPeaks } from '~/assets/scripts/utils/get-sample-audio-pea
 import { getFullAudioMagnitudesPeaks } from '~/assets/scripts/utils/get-audio-magnitudes'
 
 export const meta = {
-  title: '低音脈動(回転)',
+  title: 'スペクトラム低音脈動(回転)',
   description: '回転しながら低音の強弱で画像が大小動きます\n左上に文字が入れられます(色はサブ色)\n処理が重めです',
-  author: 'cagpie'
+  author: 'cagpie',
+  requires: {}
 }
 
 export async function generate(width, height, fps, isPreview, options) {

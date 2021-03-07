@@ -5,7 +5,8 @@ import { getSampleAudioPeaks } from '~/assets/scripts/utils/get-sample-audio-pea
 export const meta = {
   title: '折れ線',
   description: '波形っぽいのを折れ線でだすやつです\n左上に文字が入れられます',
-  author: 'cagpie'
+  author: 'cagpie',
+  requires: {}
 }
 
 export async function generate(width, height, fps, isPreview, options) {

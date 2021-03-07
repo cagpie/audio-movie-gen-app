@@ -5,7 +5,8 @@ import { getSampleAudioPeaks } from '~/assets/scripts/utils/get-sample-audio-pea
 export const meta = {
   title: '脈動',
   description: '音の強弱で画像が大小動くやつです\n左上に文字が入れられます(色はサブ色)',
-  author: 'cagpie'
+  author: 'cagpie',
+  requires: {}
 }
 
 /*

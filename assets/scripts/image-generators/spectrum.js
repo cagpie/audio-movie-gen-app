@@ -4,7 +4,8 @@ import { getFullAudioMagnitudesList } from '~/assets/scripts/utils/get-audio-mag
 export const meta = {
   title: 'スペクトラム雑',
   description: '周波数を出すデモ\n計算処理が多くブラウザが固まるように見えますが、気長にお待ちください',
-  author: 'cagpie'
+  author: 'cagpie',
+  requires: {}
 }
 
 export async function generate(width, height, fps, isPreview, options) {

@@ -3,9 +3,10 @@ import { getSampleAudioPeaks } from '~/assets/scripts/utils/get-sample-audio-pea
 import { getFullAudioMagnitudesPeaksList } from '~/assets/scripts/utils/get-audio-magnitudes'
 
 export const meta = {
-  title: 'スペクトル 6 line',
+  title: 'スペクトラム 6 line',
   description: '処理が重めです',
-  author: 'cagpie'
+  author: 'cagpie',
+  requires: {}
 }
 
 export async function generate(width, height, fps, isPreview, options) {
