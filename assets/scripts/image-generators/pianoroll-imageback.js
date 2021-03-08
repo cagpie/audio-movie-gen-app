@@ -5,7 +5,7 @@ import { prerendering, rendering, getBackgroundCanvas } from '~/assets/scripts/u
 
 export const meta = {
   title: 'ピアノロール(画像背景)',
-  description: '音声ファイルの他に、MIDIファイルが必要です\nオーディオとMIDIで頭の空白などが揃っている必要があります',
+  description: '音声ファイルの他に、MIDIファイルが必要です\n画像が背景になります',
   author: 'cagpie',
   requires: {
     image: true,

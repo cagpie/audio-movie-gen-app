@@ -115,7 +115,7 @@ function drawPianoRollNotes (data, canvas, tempCanvases, options) {
             };
 
             context.fillStyle = ChannelColor[note.channel];
-            context.globalAlpha = note.velocity*(expression/127) * 0.5 + 0.5;
+            context.globalAlpha = note.velocity*(expression/127) * 0.6 + 0.4;
 
             // パーカッション
             if(note.channel === 9){
@@ -123,7 +123,7 @@ function drawPianoRollNotes (data, canvas, tempCanvases, options) {
                 const _tempCanvas = tempCanvases[Math.floor((x/canvasRatio + p)/canvas.width) + c];
                 const _context = _tempCanvas.getContext('2d');
 
-                _context.globalAlpha = (note.velocity*(expression/127)) * percussionNote.a[p];
+                _context.globalAlpha = (note.velocity*(expression/127)) * percussionNote.a[p] * 0.6 + 0.4;
                 _context.fillRect(bar.x + p, bar.y+(percussionNote.y[p]), 1, percussionNote.h[p]);
               }
               return;
