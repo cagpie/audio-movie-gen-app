@@ -7,7 +7,7 @@
         </nuxt-link>
       </div>
       <div class="menu">
-        <div class="menu-item" @click="showTermsModal">利用規約</div>
+        <!-- <div class="menu-item" @click="showTermsModal">利用規約</div> -->
         <div class="menu-item twitter" @click="tweet">
           <i></i>Tweet
         </div>
@@ -22,7 +22,10 @@
     </div>
     <footer class="app-footer">
       <div class="footer-item">
-        ©︎ 2021 Audio -> Movie Generator (v0.4.3)
+        ©︎ 2021 Audio -> Movie Generator (v0.4.4)
+      </div>
+      <div class="footer-item">
+        このサイトは個人の研究目的で開発されています
       </div>
       <div class="footer-item">
         <a href="https://twitter.com/cagpie" target="_blank">Twitter (@cagpie)</a>

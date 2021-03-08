@@ -187,8 +187,10 @@ export function prerendering (data, canvas, options) {
     tempCanvases.push(c);
   }
 
-  // 背景拍子の描画
-  drawPianoRollBeats(data, canvas, tempCanvases, options.canvasRatio)
+  if (!(options && options.noLines)) {
+    // 背景拍子の描画
+    drawPianoRollBeats(data, canvas, tempCanvases, options.canvasRatio)
+  }
 
   // ノートの描画
   drawPianoRollNotes(data, canvas, tempCanvases, options)
@@ -196,7 +198,7 @@ export function prerendering (data, canvas, options) {
   return tempCanvases
 }
 
-export function rendering (x, canvas, context, tempCanvases) {
+export function rendering (x, canvas, context, tempCanvases, options) {
   function _mod (a, b) {
     return(a*b<0)*b+a%b
   }
@@ -216,8 +218,10 @@ export function rendering (x, canvas, context, tempCanvases) {
     }
 
     // 再生ライン
-    context.fillStyle = '#888';
-    context.fillRect(Math.floor(canvasW/2), 0, 1, canvas.height);
+    if (!(options && options.noLines)) {
+      context.fillStyle = '#888';
+      context.fillRect(Math.floor(canvasW/2), 0, 1, canvas.height);
+    }
   } else {
     // ページ切り替わり
     let subW = canvas.width - canvasW;
