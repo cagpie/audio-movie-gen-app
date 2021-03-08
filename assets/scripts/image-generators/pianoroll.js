@@ -25,7 +25,7 @@ export async function generate(width, height, fps, isPreview, options) {
   context.textBaseline = "top";
 
   const picoAudio = new PicoAudio()
-  const parsedSmf = picoAudio.parseSMF(smfArrayBuffer)
+  const parsedSmf = picoAudio.parseSMF(smfArrayBuffer.slice(0, -1))
   picoAudio.setData(parsedSmf)
 
   const canvasRatio = Math.floor(15 * (parsedSmf.header.resolution / 960))
