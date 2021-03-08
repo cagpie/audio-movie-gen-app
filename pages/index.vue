@@ -221,11 +221,12 @@ export default {
       const reader = new FileReader()
       reader.onload = () => {
         this.iconImage = new Image()
+        this.iconImage.onload = () => {
+          this.updatePreview()
+        }
         this.iconImage.src = reader.result
 
         window.localStorage.setItem('iconImage', reader.result)
-
-        this.updatePreview()
       }
 
       if (file && file.type.match('image.*')) {
