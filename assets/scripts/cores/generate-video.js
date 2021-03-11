@@ -8,7 +8,7 @@ export async function generateVideo(ffmpeg, fps, images, audio, ffmpegRunningOpt
   await ffmpeg.run(
     '-r', `${ fps }`,
     '-i', 'image%d.png',
-    '-i', 'audio.mp3', '-acodec', 'aac', '-ab', '160k', '-ac', '2',
+    '-i', 'audio.mp3', '-acodec', 'aac', '-ab', '320k', '-ac', '2',
     '-pix_fmt', 'yuv420p',
     ...ffmpegRunningOptions,
     'output.mp4'

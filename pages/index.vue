@@ -20,24 +20,33 @@
           </div>
           <div class="steps-title">▼ 基本素材</div>
           <div class="step" v-if="imageGenerators[imageGeneratorIdx].meta.requires.smf">
-            <label>
+            <label
+              @dragover.prevent
+              @drop.prevent="dropFile($event, selectMidiFile)"
+            >
               <input type="file" accept="audio/midi" @change="selectMidiFile" hidden>
               <div class="button input-file" v-if="!smfArrayBuffer">MIDIファイルを選択</div>
-                <div class="button input-file" v-else>✔︎ MIDIファイルを選択済み</div>
+              <div class="button input-file" v-else>✔︎ MIDIファイルを選択済み</div>
             </label>
           </div>
-          <div class="step" v-if="imageGenerators[imageGeneratorIdx].meta.requires.image">
-              <label>
-              <input type="file" accept="image/*" @change="selectImage"  hidden>
+          <div class="step">
+            <label
+              @dragover.prevent
+              @drop.prevent="dropFile($event, selectImage)"
+            >
+              <input type="file" accept="image/*" @change="selectImage" hidden>
               <div class="button input-file" v-if="!iconImage">画像を選択</div>
               <div class="button input-file" v-else>✔︎ 画像を選択済み</div>
             </label>
           </div>
           <div class="step">
-            <label>
+            <label
+              @dragover.prevent
+              @drop.prevent="dropFile($event, selectAudio)"
+            >
               <input type="file" accept="audio/*" @change="selectAudio" hidden>
               <div class="button input-file" v-if="!audioArrayBuffer">音声を選択</div>
-                <div class="button input-file" v-else>✔︎ 音声を選択済み</div>
+              <div class="button input-file" v-else>✔︎ 音声を選択済み</div>
             </label>
           </div>
           <div class="steps-title">▼ オプション</div>
@@ -204,7 +213,7 @@ export default {
       }, 500)
     },
     selectAudio(e) {
-      const file = e.target.files[0]
+      const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0]
       const reader = new FileReader()
       reader.onload = () => {
         this.audioArrayBuffer = reader.result
@@ -217,7 +226,7 @@ export default {
       }
     },
     selectImage(e) {
-      const file = e.target.files[0]
+      const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0]
       const reader = new FileReader()
       reader.onload = () => {
         this.iconImage = new Image()
@@ -234,7 +243,7 @@ export default {
       }
     },
     selectMidiFile(e) {
-      const file = e.target.files[0]
+      const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0]
       const reader = new FileReader()
       reader.onload = () => {
         this.smfArrayBuffer = reader.result
@@ -245,6 +254,9 @@ export default {
       if (file && file.type.match('audio.*')) {
         reader.readAsArrayBuffer(file)
       }
+    },
+    dropFile(e, func) {
+      func(e)
     },
     async save(isPractice) {
       if (!this.audioArrayBuffer) {
