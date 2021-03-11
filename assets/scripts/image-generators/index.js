@@ -18,7 +18,7 @@ export const imageGenerators = [
   wave,
   spectrum,
   spectrumTeinei,
-  pectrumTeineiImageBack,
+  spectrumTeineiImageBack,
   spectrum6Lines,
   spectrum6LinesImageback,
   spectrumBassMyakudouRotate,
