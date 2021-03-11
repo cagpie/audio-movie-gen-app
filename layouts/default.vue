@@ -22,7 +22,7 @@
     </div>
     <footer class="app-footer">
       <div class="footer-item">
-        ©︎ 2021 Audio -> Movie Generator (v0.5.0)
+        ©︎ 2021 Audio -> Movie Generator (v0.5.1)
       </div>
       <div class="footer-item">
         このサイトは個人の研究目的で開発されています

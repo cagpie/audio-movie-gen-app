@@ -2,7 +2,7 @@ import { getCanvas } from '~/assets/scripts/utils/get-canvas'
 import { getFullAudioMagnitudesList } from '~/assets/scripts/utils/get-audio-magnitudes'
 
 export const meta = {
-  title: 'スペクトラム丁寧',
+  title: 'スペクトラム丁寧(画像背景)',
   description: '周波数を出すデモ\n計算処理が多くブラウザが固まるように見えますが、気長にお待ちください\n他のよりさらに重め',
   author: 'cagpie',
   requires: {
@@ -11,7 +11,7 @@ export const meta = {
 }
 
 export async function generate(width, height, fps, isPreview, options) {
-  const { colorMain, colorSub, text, audioArrayBuffer, maxDuration } = options
+  const { colorMain, colorSub, text, iconImage, audioArrayBuffer, maxDuration } = options
 
   // プレビューはなし
   if (isPreview) {
@@ -38,6 +38,9 @@ export async function generate(width, height, fps, isPreview, options) {
 
   const magnitudesList = getFullAudioMagnitudesList(channelData, audioBuffer.sampleRate, fps, 2 ** 12, maxDuration)
 
+  const imageHeight = iconImage.height * (canvas.width / iconImage.width)
+  const imageY = (canvas.height - imageHeight) / 2
+
   const images = [];
 
   // 連番画像生成
@@ -53,6 +56,14 @@ export async function generate(width, height, fps, isPreview, options) {
     // 画像にしたいものを描画
     context.fillStyle = colorSub
     context.fillRect(0, 0, canvas.width, canvas.height)
+
+    context.drawImage(
+      iconImage,
+      0,
+      imageY,
+      canvas.width,
+      imageHeight
+    )
 
     context.fillStyle = colorMain
     let count = 0;

@@ -9,7 +9,7 @@ import * as spectrumBassMyakudouRotate from './spectrum-bass-myakudou-rotate'
 import * as pianoroll from './pianoroll'
 import * as pianorollImageback from './pianoroll-imageback'
 import * as spectrumTeinei from './spectrum-teinei'
-
+import * as spectrumTeineiImageBack from './spectrum-teinei-imageback'
 
 export const imageGenerators = [
   myakudou,
@@ -18,6 +18,7 @@ export const imageGenerators = [
   wave,
   spectrum,
   spectrumTeinei,
+  pectrumTeineiImageBack,
   spectrum6Lines,
   spectrum6LinesImageback,
   spectrumBassMyakudouRotate,
