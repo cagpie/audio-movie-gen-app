@@ -4,7 +4,7 @@ import { getFullAudioMagnitudesPeaksList } from '~/assets/scripts/utils/get-audi
 
 export const meta = {
   title: 'スペクトラム6線',
-  description: '処理が重めです',
+  description: 'シンプルなやつです',
   author: 'cagpie',
   requires: {
     image: false

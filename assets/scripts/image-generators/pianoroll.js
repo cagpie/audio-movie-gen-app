@@ -29,8 +29,8 @@ export async function generate(width, height, fps, isPreview, options) {
   picoAudio.setData(parsedSmf)
 
   const canvasRatio = Math.floor(15 * (parsedSmf.header.resolution / 960))
-  const noteHeight = 4
-  const bottomMargin = 60
+  const noteHeight = 5
+  const bottomMargin = 200
   const tempCanvases = prerendering(parsedSmf, canvas, {
     canvasRatio: canvasRatio,
     noteHeight: noteHeight,

@@ -5,6 +5,9 @@
         <div class="canvas">
           <canvas :width="canvasWidth" :height="canvasHeight" ref="canvas" @click="isPreviewPause=!isPreviewPause" />
         </div>
+        <div class="description">
+          音声ファイルからmp4動画を生成できます → <span class="demo" @click="useDemo">デモのファイルを読み込む</span>
+        </div>
         <div class="log">
           <div v-for="log in logs" :key="log">
             {{ log }}
@@ -285,6 +288,21 @@ export default {
     dropFile(e, func) {
       func(e)
     },
+    async useDemo() {
+      this.imageGeneratorIdx = 11
+
+      const audio = await fetch('/demo.mp3')
+      this.audioArrayBuffer = await audio.arrayBuffer()
+
+      const smf = await fetch('/demo.mid')
+      this.smfArrayBuffer = await smf.arrayBuffer()
+
+      this.iconImage = new Image()
+      this.iconImage.onload = () => {
+        this.updatePreview()
+      }
+      this.iconImage.src = '/demo.png'
+    },
     async save(isPractice) {
       if (!this.audioArrayBuffer) {
         alert('音声ファイルを選択してください')
@@ -369,9 +387,17 @@ export default {
         }
       }
 
+      .description {
+        margin-top: 20px;
+        .demo {
+          color: $bright;
+          cursor: pointer;
+        }
+      }
+
       .log {
         margin-top: 20px;
-        height: 140px;
+        height: 100px;
         overflow-y: scroll;
         color: #888;
       }

@@ -63,11 +63,11 @@ export async function generate(width, height, fps, isPreview, options) {
 
     const start = Math.floor(sampleRate * (idx / fps))
 
-    context.moveTo(0,  baseWaveHeight + channelData[start] * 100)
+    context.moveTo(0,  baseWaveHeight + channelData[start] * 200)
     for (let i = 1; i <= canvas.width; i++) {
       context.lineTo(
         i,
-        baseWaveHeight + (start + i * step < channelData.length ? channelData[start + i * step] * 100 : 0)
+        baseWaveHeight + (start + i * step < channelData.length ? channelData[start + i * step] * 200 : 0)
       )
     }
     // context.lineTo(canvas.width, canvas.height)
