@@ -1,6 +1,6 @@
 # audio-movie-gen-app
 
-https://audio-moive-gen.app
+https://audio-movie-gen.app
 
 このサービスの核の部分は [ffmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm) でできています
 
