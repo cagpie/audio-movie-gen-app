@@ -22,13 +22,13 @@
     </div>
     <footer class="app-footer">
       <div class="footer-item">
-        ©︎ 2021 Audio -> Movie Generator (v0.5.1)
+        ©︎ 2021 Audio -> Movie Generator (v0.6.0) Powered by FFMPEG.wasm
       </div>
       <div class="footer-item">
-        このサイトは個人の研究目的で開発されています
+        個人の研究目的での開発物です
       </div>
       <div class="footer-item">
-        <a href="https://twitter.com/cagpie" target="_blank">Twitter (@cagpie)</a>
+        <a href="https://twitter.com/cagpie" target="_blank">@cagpie</a>
       </div>
     </footer>
     <modal name="terms-modal">

@@ -3,7 +3,12 @@
     <section class="generator">
       <div class="left-view">
         <div class="canvas">
-          <canvas width="640" height="360" ref="canvas" @click="isPreviewPause=!isPreviewPause" />
+          <canvas :width="canvasWidth" :height="canvasHeight" ref="canvas" @click="isPreviewPause=!isPreviewPause" />
+        </div>
+        <div class="log">
+          <div v-for="log in logs" :key="log">
+            {{ log }}
+          </div>
         </div>
       </div>
       <div class="right-view">
@@ -18,7 +23,7 @@
             <div class="image-generator-description" v-text="imageGenerators[imageGeneratorIdx].meta.description">
             </div>
           </div>
-          <div class="steps-title">▼ 基本素材</div>
+          <div class="steps-title">▼ 使うファイル</div>
           <div class="step" v-if="imageGenerators[imageGeneratorIdx].meta.requires.smf">
             <label
               @dragover.prevent
@@ -29,7 +34,7 @@
               <div class="button input-file" v-else>✔︎ MIDIファイルを選択済み</div>
             </label>
           </div>
-          <div class="step">
+          <div class="step" v-if="imageGenerators[imageGeneratorIdx].meta.requires.image">
             <label
               @dragover.prevent
               @drop.prevent="dropFile($event, selectImage)"
@@ -76,6 +81,17 @@
               </div>
             </div>
           </div>
+          <div class="step">
+            <div class="key-value">
+              <div class="key">その他</div>
+              <div class="value">
+                <label>
+                  <input type="checkbox" v-model="isDurationLimited">
+                  動画を140秒でカットする
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="generate-buttons" v-if="!isRendering">
           <div class="button save practice" @click="save(true)">
@@ -109,6 +125,8 @@
 </template>
 
 <script>
+import { createFFmpeg } from '@ffmpeg/ffmpeg'
+
 import { generateVideo } from '~/assets/scripts/cores/generate-video'
 import { imageGenerators } from '~/assets/scripts/image-generators/index'
 import { renderEndingWatermark } from '~/assets/scripts/utils/render-ending-watermark'
@@ -120,8 +138,8 @@ export default {
       ffmpeg: null,
       isFfmpegLoaded: false,
       canvas: null,
-      canvasWidth: 640,
-      canvasHeight: 360,
+      canvasWidth: 854,
+      canvasHeight: 480,
       fps: 20,
       imageGenerators: imageGenerators,
       imageGeneratorIdx: 0,
@@ -135,14 +153,23 @@ export default {
       previewTimer: null,
       previewCanvases: [],
       isPreviewPause: false,
-      isRendering: false
+      isRendering: false,
+      isDurationLimited: true,
+      logs: []
     }
   },
   mounted() {
-    const { createFFmpeg } = window.FFmpeg;
-    this.ffmpeg = createFFmpeg({ log: true })
+    this.ffmpeg = createFFmpeg()
     this.ffmpeg.load()
       .then(() => { this.isFfmpegLoaded = true })
+
+    this.ffmpeg.setProgress((progress) => {
+      if (!(progress.ratio && progress.time)) {
+        return
+      }
+
+      this.pushLog(`動画合成中 現在時点 ${ progress.time }s`)
+    });
 
     this.canvas = document.getElementsByTagName('canvas')[0]
     const context = this.canvas.getContext('2d')
@@ -267,6 +294,8 @@ export default {
       this.isPreviewPause = true
       this.isRendering = true
 
+      this.pushLog('画像生成中')
+
       const imageBuffers = await this.imageGenerators[this.imageGeneratorIdx].generate(
         this.canvasWidth,
         this.canvasHeight,
@@ -279,7 +308,7 @@ export default {
           colorSub: this.colorSub,
           text: this.text,
           smfArrayBuffer: this.smfArrayBuffer,
-          maxDuration: isPractice ? 10 : 140,
+          maxDuration: isPractice ? 10 : (this.isDurationLimited ? 140 : 480),
         }
       )
 
@@ -288,17 +317,23 @@ export default {
         return
       }
 
+      this.pushLog('画像生成完了')
+
       if (!isPractice) {
         await renderEndingWatermark(imageBuffers, 3 * this.fps)
       }
+
+      this.pushLog('動画合成中')
 
       const video = await generateVideo(
         this.ffmpeg,
         this.fps,
         imageBuffers,
         new Uint8Array(this.audioArrayBuffer),
-        isPractice ? ['-t', '10'] : ['-t', '140']
+        isPractice ? ['-t', '10'] : ['-t', (this.isDurationLimited ? '140' : '480')]
       )
+
+      this.pushLog('動画合成完了')
 
       const blob = new Blob([video], { type: 'video/mp4' });
       this.videoSrc = URL.createObjectURL(blob);
@@ -307,6 +342,10 @@ export default {
       this.isRendering = false
 
       this.$modal.show('complete-modal')
+    },
+    pushLog(text) {
+      const date = new Date()
+      this.logs.unshift(`${ date.getHours() }:${ date.getMinutes() }:${ date.getSeconds() } - ${ text }`)
     }
   }
 }
@@ -325,7 +364,16 @@ export default {
         background-color: #eee;
         > canvas {
           display: block;
+          width: 640px;
+          height: 380px;
         }
+      }
+
+      .log {
+        margin-top: 20px;
+        height: 140px;
+        overflow-y: scroll;
+        color: #888;
       }
     }
 

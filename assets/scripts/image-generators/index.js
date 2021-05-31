@@ -12,16 +12,16 @@ import * as spectrumTeinei from './spectrum-teinei'
 import * as spectrumTeineiImageBack from './spectrum-teinei-imageback'
 
 export const imageGenerators = [
+  spectrum6Lines,
+  spectrum6LinesImageback,
+  spectrumBassMyakudouRotate,
+  spectrum,
+  spectrumTeinei,
+  spectrumTeineiImageBack,
   myakudou,
   myakudouRotate,
   oresen,
   wave,
-  spectrum,
-  spectrumTeinei,
-  spectrumTeineiImageBack,
-  spectrum6Lines,
-  spectrum6LinesImageback,
-  spectrumBassMyakudouRotate,
   pianoroll,
   pianorollImageback
 ]

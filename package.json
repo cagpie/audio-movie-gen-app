@@ -11,6 +11,8 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@ffmpeg/core": "^0.10.0",
+    "@ffmpeg/ffmpeg": "^0.10.0",
     "@nuxtjs/google-gtag": "^1.0.4",
     "axios": "^0.19.2",
     "cross-env": "^5.2.0",

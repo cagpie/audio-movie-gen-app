@@ -62,10 +62,10 @@ export async function generate(width, height, fps, isPreview, options) {
         sum += magnitudes[Math.floor(j)]
       }
 
-      const height = Math.sqrt(sum) * 2 + 2
+      const height = Math.sqrt(sum) * 5 + 2
       context.fillRect(
-        count * 7 + 2,
-        canvas.height - height - 20,
+        count * 10 + 5,
+        canvas.height - height,
         5,
         height
       )
