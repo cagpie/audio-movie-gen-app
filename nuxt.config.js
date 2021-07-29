@@ -17,10 +17,10 @@ module.exports = {
       { property: 'og:url', content: 'https://audio-movie-gen.app' },
       { property: 'og:description', content: '音声ファイルからmp4動画を生成するやつ' },
       { property: 'og:image', content: 'https://audio-movie-gen.app/icon.png' },
-      { name: 'twitter:card', content: 'summary' }
+      { name: 'twitter:card', content: 'summary' },
+      { 'http-equiv': 'origin-trial', content: 'AlMI0MgnlaqjAnQFpvYBVgjQKiMmybrlty5CIjQ1Fs8GwjvK4Qw75q03CVOqFXzzjh43Imf9z7bo7D4/TOjkqQAAAABqeyJvcmlnaW4iOiJodHRwczovL2F1ZGlvLW1vdmllLWdlbi5hcHA6NDQzIi' }
     ],
     script: [
-      { src: 'https://unpkg.com/@ffmpeg/ffmpeg@0.9.5/dist/ffmpeg.min.js' }
     ],
     link: [
        { rel: 'icon', type: 'image/x-icon', href: '/icon.png' }
