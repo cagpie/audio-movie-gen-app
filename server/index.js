@@ -27,6 +27,13 @@ async function start () {
   app.use(bodyParser.urlencoded({extended: true}))
   app.use(bodyParser.json())
 
+  // Add Header for using Shared Array Buffer
+  app.use((req, res, next) => {
+    res.header("Cross-Origin-Embedder-Policy", "require-corp");
+    res.header("Cross-Origin-Opener-Policy", "same-origin");
+    next();
+  });
+
   // Give nuxt middleware to express
   app.use(nuxt.render)
 

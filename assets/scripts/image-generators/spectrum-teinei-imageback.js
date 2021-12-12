@@ -6,7 +6,7 @@ export const meta = {
   description: '周波数を出すデモ\n計算処理が多くブラウザが固まるように見えますが、気長にお待ちください\n他のよりさらに重め',
   author: 'cagpie',
   requires: {
-    image: false
+    image: true
   }
 }
 

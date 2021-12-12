@@ -1,4 +1,4 @@
-import PicoAudio from 'pico-audio-js'
+import PicoAudio from 'picoaudio'
 
 import { getCanvas } from '~/assets/scripts/utils/get-canvas'
 import { prerendering, rendering, getBackgroundCanvas } from '~/assets/scripts/utils/render-pianoroll'

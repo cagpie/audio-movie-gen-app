@@ -1,7 +1,4 @@
-import PicoAudio from 'pico-audio-js'
-
 import { getCanvas } from '~/assets/scripts/utils/get-canvas'
-import { prerendering, rendering, getBackgroundCanvas } from '~/assets/scripts/utils/render-pianoroll'
 
 export const meta = {
   title: '波形',
