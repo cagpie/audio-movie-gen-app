@@ -3,7 +3,7 @@ import { getFullAudioMagnitudesList } from '~/assets/scripts/utils/get-audio-mag
 
 export const meta = {
   title: 'スペクトラム丁寧(画像背景)',
-  description: '周波数を出すデモ\n計算処理が多くブラウザが固まるように見えますが、気長にお待ちください\n他のよりさらに重め',
+  description: '周波数を出すデモ\n計算処理が多くブラウザが固まるように見えますが、気長にお待ちください\n他のよりさらに重め\n高画質対応してません',
   author: 'cagpie',
   requires: {
     image: true

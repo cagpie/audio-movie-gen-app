@@ -6,9 +6,10 @@
           <canvas :width="canvasWidth" :height="canvasHeight" ref="canvas" @click="isPreviewPause=!isPreviewPause" />
         </div>
         <div class="description">
-          <div>音声ファイルからmp4動画を生成できます → <span class="demo" @click="useDemo">デモのファイルを読み込む</span></div>
-          <div>aac(m4a)形式の音声ファイルの場合、音質を保ったまま動画生成できる場合が多いです</div>
-          <div>不具合ありましたら作者Twitterまでご連絡ください</div>
+          <p>音声ファイルからmp4動画を生成できます → <span class="demo" @click="useDemo">デモのファイルを読み込む</span></p>
+          <p>パソコンによっては画像生成中に固まる場合がありますが、しばらくお待ちいただくと解消する場合があります</p>
+          <p>音質劣化する場合はaac(m4a)形式の音声ファイルでお試しください</p>
+          <p>不具合がありましたら作者Twitterまでご連絡ください</p>
         </div>
         <div class="log">
           <div v-for="log in logs" :key="log">
@@ -90,10 +91,26 @@
             <div class="key-value">
               <div class="key">その他</div>
               <div class="value">
-                <label>
-                  <input type="checkbox" v-model="isDurationLimited">
-                  動画を140秒でカットする
-                </label>
+                <div>
+                  <div>
+                    <label>
+                      <input type="checkbox" v-model="isDurationLimited">
+                      動画を140秒でカットする
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      <input type="checkbox" v-model="isHighFps">
+                      FPSをあげる(重くなる)
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      <input type="checkbox" v-model="isHighResolution">
+                      幅を大きくする(重くなる)
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -161,7 +178,24 @@ export default {
       isPreviewPause: false,
       isRendering: false,
       isDurationLimited: true,
+      isHighFps: false,
+      isHighResolution: false,
       logs: []
+    }
+  },
+  watch: {
+    isHighFps() {
+      this.fps = this.isHighFps ? 30 : 20
+    },
+    isHighResolution() {
+      if (this.isHighResolution) {
+        this.canvasWidth = 1068
+        this.canvasHeight = 600
+      } else {
+        this.canvasWidth = 854
+        this.canvasHeight = 480
+      }
+      this.updatePreview()
     }
   },
   mounted() {
@@ -249,7 +283,6 @@ export default {
       const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0]
       const reader = new FileReader()
       reader.onload = () => {
-        console.log("****", reader, file)
         this.audioArrayBuffer = reader.result
 
         this.updatePreview()
