@@ -6,7 +6,9 @@
           <canvas :width="canvasWidth" :height="canvasHeight" ref="canvas" @click="isPreviewPause=!isPreviewPause" />
         </div>
         <div class="description">
-          音声ファイルからmp4動画を生成できます → <span class="demo" @click="useDemo">デモのファイルを読み込む</span>
+          <div>音声ファイルからmp4動画を生成できます → <span class="demo" @click="useDemo">デモのファイルを読み込む</span></div>
+          <div>aac(m4a)形式の音声ファイルの場合、音質を保ったまま動画生成できる場合が多いです</div>
+          <div>不具合ありましたら作者Twitterまでご連絡ください</div>
         </div>
         <div class="log">
           <div v-for="log in logs" :key="log">
