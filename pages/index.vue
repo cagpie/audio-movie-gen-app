@@ -147,6 +147,7 @@ export default {
       imageGenerators: imageGenerators,
       imageGeneratorIdx: 0,
       audioArrayBuffer: null,
+      isAac: false,
       iconImage: null,
       text: '',
       colorMain: '#dddddd',
@@ -246,13 +247,15 @@ export default {
       const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0]
       const reader = new FileReader()
       reader.onload = () => {
+        console.log("****", reader, file)
         this.audioArrayBuffer = reader.result
 
         this.updatePreview()
       }
 
-      if (file && file.type.match('audio.*')) {
+      if (file && /^audio/.test(file.type)) {
         reader.readAsArrayBuffer(file)
+        this.isAac = /(m4a|aac)/.test(file.type)
       }
     },
     selectImage(e) {
@@ -281,7 +284,7 @@ export default {
         this.updatePreview()
       }
 
-      if (file && file.type.match('audio.*')) {
+      if (file && /^audio/.test(file.type)) {
         reader.readAsArrayBuffer(file)
       }
     },
@@ -348,6 +351,7 @@ export default {
         this.fps,
         imageBuffers,
         new Uint8Array(this.audioArrayBuffer),
+        this.isAac,
         isPractice ? ['-t', '10'] : ['-t', (this.isDurationLimited ? '140' : '480')]
       )
 

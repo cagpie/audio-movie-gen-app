@@ -1,14 +1,14 @@
-export async function generateVideo(ffmpeg, fps, images, audio, ffmpegRunningOptions = []) {
+export async function generateVideo(ffmpeg, fps, images, audio, isAac, ffmpegRunningOptions = []) {
   images.forEach((image, i) => {
     ffmpeg.FS('writeFile', `image${i}.png`, image);
   });
 
-  ffmpeg.FS('writeFile', 'audio.mp3', audio);
+  ffmpeg.FS('writeFile', 'audio.aac', audio);
 
   await ffmpeg.run(
     '-r', `${ fps }`,
     '-i', 'image%d.png',
-    '-i', 'audio.mp3', '-acodec', 'aac', '-ab', '320k', '-ac', '2',
+    '-i', 'audio.aac', ...(isAac ? ['-c:a', 'copy'] : ['-acodec', 'aac', '-ab', '320k', '-ac', '2']),
     '-pix_fmt', 'yuv420p',
     ...ffmpegRunningOptions,
     'output.mp4'

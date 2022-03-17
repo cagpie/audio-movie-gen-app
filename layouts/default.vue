@@ -22,7 +22,7 @@
     </div>
     <footer class="app-footer">
       <div class="footer-item">
-        ©︎ 2021 Audio -> Movie Generator (v0.6.2) Powered by FFMPEG.wasm
+        ©︎ 2021 Audio -> Movie Generator (v0.7.0) Powered by FFMPEG.wasm
       </div>
       <div class="footer-item">
         個人の研究目的でのプロダクトです
